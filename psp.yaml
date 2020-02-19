@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  title: Bobcat Sales Payment Service API Example
+  title: Bobcat Payment Service API Example
   version: 0.0.0
 
 paths:
