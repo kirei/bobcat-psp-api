@@ -1,0 +1,272 @@
+openapi: 3.0.0
+info:
+  title: Bobcat Sales Payment Service API Example
+  version: 0.0.0
+
+paths:
+
+  '/payment_transaction':
+    post:
+      description: Create payment transaction
+      operationId: create_payment_transaction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/payment_transaction_request'
+            example:
+              description: Nice merchandise
+              amount: 42.0
+              currency: SEK
+              request_id: BE852B5E-F571-49FB-9F94-BE5C625BA09D
+              callback_url: https://api.example.com/callback/BE852B5E-F571-49FB-9F94-BE5C625BA09D
+              callback_method: POST
+              redirect_url: https://www.example.com/cart/123
+              language: sv
+      responses:
+        '201':
+          description: Payment transaction created
+          headers:
+            location:
+              description: URL of created payment transaction
+              schema:
+                type: string
+                format: uri
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/payment_transaction'
+
+  '/payment_transaction/{id}':
+    parameters:
+      - name: id
+        in: path
+        description: Payment transaction ID
+        required: true
+        schema:
+          type: string
+        example: EC3F418E-6CEF-44E9-BB6B-709C70D33C9F
+    get:
+      description: Get payment transaction
+      operationId: get_payment_transaction
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/payment_transaction'
+    patch:
+      description: Update payment transaction
+      operationId: update_payment_transaction
+      responses:
+        '204':
+          description: Payment transaction updated
+
+  '/payment_method':
+    post:
+      description: Create payment method
+      operationId: create_payment_method
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/payment_method_request'
+            example:
+              request_id: 90C44B55-4C6C-4E18-BBD4-FA05B951910A
+              description: My payment method
+              callback_url: https://api.example.com/callback/72204355-41AC-4CC6-99E5-C9DD70EBEB16
+              callback_method: POST
+              redirect_url: https://www.example.com/ui/567
+              language: sv
+      responses:
+        '201':
+          description: Payment method created
+          headers:
+            location:
+              description: URL of created payment transaction
+              schema:
+                type: string
+                format: uri
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/payment_method'
+
+  '/payment_method/{id}':
+    parameters:
+      - name: id
+        in: path
+        description: Payment method ID
+        required: true
+        schema:
+          type: string
+        example: 2DF1C4FC-AB71-4D0E-B4DB-BFBF977F91CF
+    get:
+      description: Get payment method
+      operationId: get_payment_method
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/payment_method'
+    delete:
+      description: Create payment method
+      operationId: delete_payment_method
+      responses:
+        '204':
+          description: Payment method deleted
+
+components:
+  schemas:
+    payment_transaction_request:
+      required:
+        - amount
+        - currency
+        - order_number
+        - callback_url
+        - callback_method
+        - redirect_url
+      type: object
+      properties:
+        description:
+          type: string
+          example: Nice merchandise
+        amount:
+          type: number
+          example: 42.0
+        currency:
+          type: string
+          example: SEK
+        request_id:
+          type: string
+          example: BE852B5E-F571-49FB-9F94-BE5C625BA09D
+        callback_url:
+          type: string
+          format: uri
+          example: https://api.example.com/callback/BE852B5E-F571-49FB-9F94-BE5C625BA09D
+        callback_method:
+          type: string
+          enum:
+            - GET
+            - POST
+          example: POST
+        redirect_url:
+          type: string
+          format: uri
+          example: https://www.example.com/cart/123
+        language:
+          description: Locale as BCP47 (RFC5646) language tag
+          type: string
+          example: sv
+    payment_transaction:
+      type: object
+      properties:
+        id:
+          type: string
+          example: EC3F418E-6CEF-44E9-BB6B-709C70D33C9F
+        description:
+          type: string
+          example: Nice merchandise
+        amount:
+          type: number
+          example: 42.0
+        currency:
+          type: string
+          example: SEK
+        request_id:
+          type: string
+          example: BE852B5E-F571-49FB-9F94-BE5C625BA09D
+        merchant_id:
+          type: string
+        callback_url:
+          type: string
+          format: uri
+          example: https://api.example.com/callback/BE852B5E-F571-49FB-9F94-BE5C625BA09D
+        redirect_url:
+          type: string
+          format: uri
+          example: https://www.example.com/cart/123
+        language:
+          description: Locale as BCP47 (RFC5646) language tag
+          type: string
+          example: sv
+        terminal_url:
+          type: string
+          format: uri
+          example: https://psp.example.com/terminal/EC3F418E-6CEF-44E9-BB6B-709C70D33C9F
+        state:
+          type: string
+          enum:
+            - authorized
+            - confirmed
+            - cancelled
+            - declined
+    payment_method_request:
+      type: object
+      required:
+        - callback_url
+        - callback_method
+        - redirect_url
+      properties:
+        request_id:
+          type: string
+          example: 90C44B55-4C6C-4E18-BBD4-FA05B951910A
+        description:
+          type: string
+          example: My payment method
+        callback_url:
+          type: string
+          format: uri
+          example: https://api.example.com/callback/72204355-41AC-4CC6-99E5-C9DD70EBEB16
+        callback_method:
+          type: string
+          enum:
+            - GET
+            - POST
+          example: POST
+        redirect_url:
+          type: string
+          format: uri
+          example: https://www.example.com/ui/567
+        language:
+          description: Locale as BCP47 (RFC5646) language tag
+          type: string
+          example: sv
+    payment_method:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 2DF1C4FC-AB71-4D0E-B4DB-BFBF977F91CF
+        request_id:
+          type: string
+          example: 90C44B55-4C6C-4E18-BBD4-FA05B951910A
+        description:
+          type: string
+          example: My payment method
+        callback_url:
+          type: string
+          format: uri
+          example: https://api.example.com/callback/72204355-41AC-4CC6-99E5-C9DD70EBEB16
+        callback_method:
+          type: string
+          enum:
+            - GET
+            - POST
+          example: POST
+        redirect_url:
+          type: string
+          format: uri
+        terminal_url:
+          type: string
+          format: uri
+          example: https://www.example.com/ui/567
+        language:
+          description: Locale as BCP47 (RFC5646) language tag
+          type: string
+          example: sv
