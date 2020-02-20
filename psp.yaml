@@ -24,6 +24,8 @@ paths:
               callback_method: POST
               redirect_url: https://www.example.com/cart/123
               language: sv
+              payment_method_id: 2DF1C4FC-AB71-4D0E-B4DB-BFBF977F91CF
+              payment_method_token: ee9Shie5Hei2xo4OhZiphee5tee1ee8uej4yu0vaeChiep0QuiaD8ieFuuphie7u
       responses:
         '201':
           description: Payment transaction created
@@ -145,6 +147,12 @@ components:
         request_id:
           type: string
           example: BE852B5E-F571-49FB-9F94-BE5C625BA09D
+        payment_method_id:
+          type: string
+          example: 2DF1C4FC-AB71-4D0E-B4DB-BFBF977F91CF
+        payment_method_token:
+          type: string
+          example: ee9Shie5Hei2xo4OhZiphee5tee1ee8uej4yu0vaeChiep0QuiaD8ieFuuphie7u
         callback_url:
           type: string
           format: uri
@@ -206,6 +214,10 @@ components:
             - confirmed
             - cancelled
             - declined
+            - timeout
+        expire:
+          type: string
+          format: date-time
     payment_method_request:
       type: object
       required:
@@ -243,6 +255,9 @@ components:
         id:
           type: string
           example: 2DF1C4FC-AB71-4D0E-B4DB-BFBF977F91CF
+        token:
+          type: string
+          example: ee9Shie5Hei2xo4OhZiphee5tee1ee8uej4yu0vaeChiep0QuiaD8ieFuuphie7u
         request_id:
           type: string
           example: 90C44B55-4C6C-4E18-BBD4-FA05B951910A
@@ -270,3 +285,6 @@ components:
           description: Locale as BCP47 (RFC5646) language tag
           type: string
           example: sv
+        expire:
+          type: string
+          format: date-time

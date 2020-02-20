@@ -1,0 +1,51 @@
+# https://sequencediagram.org/
+
+title Purchase
+
+actor "User" as user
+participant "Mobile App" as app
+participant "Bobcat Sales" as sales
+participant "PSP" as psp
+
+
+user->app: Pay
+app->sales: Request payment
+
+sales->psp: AUTHORIZE: ""POST /payment_transaction""
+sales<--psp: Payment transaction created (pending)
+
+
+alt Interactive payment
+
+app<--sales: Return terminal_url
+user<--app: Redirect to terminal_url
+
+user<->psp: Perform interactive payment
+
+psp->sales: Callback to callback_url
+psp<--sales: OK
+
+user<--psp: Redirect to redirect_url
+user->app: Request redirect_url
+app->sales: Check result
+
+
+else Non-interactive payment
+
+psp->sales: Callback to callback_url
+psp<--sales: OK
+
+
+
+end
+
+sales->psp: Fetch transaction
+sales<--psp: Return transaction
+
+note over sales: Perform ticketing
+
+sales->psp: CAPTURE: ""PATCH /payment_transaction""
+sales<--psp: OK
+
+app<--sales: Payment done
+user<--app: Payment done

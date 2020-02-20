@@ -1,0 +1,30 @@
+# https://sequencediagram.org/
+
+title Register new payment method
+
+actor "User" as user
+participant "Mobile App" as app
+participant "Bobcat Sales" as sales
+participant "PSP" as psp
+
+
+user->app: Register new payment method
+app->sales: Register new payment method
+
+sales->psp: ""POST /payment_method""
+sales<--psp: Payment method created (pending)
+
+app<--sales: Return terminal_url
+user<--app: Redirect to terminal_url
+
+user<->psp: Register payment method
+
+psp->sales: Callback to callback_url
+psp<--sales: OK
+
+sales->psp: ""GET /payment_method/xxx""
+sales<--psp: Return payment method token
+
+user<--psp: Redirect to redirect_url
+user->app: Request redirect_url
+app->sales: Check result
