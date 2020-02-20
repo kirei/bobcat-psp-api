@@ -208,12 +208,22 @@ components:
           format: uri
           example: https://psp.example.com/terminal/EC3F418E-6CEF-44E9-BB6B-709C70D33C9F
         state:
+          description: |
+            terminal: waiting for user interaction
+            authorized: payment authorized
+            captured: payment done (may be refunded)
+            declined: payment not authorized (final state)
+            cancelled: payment cancelled (final state)
+            refunded: transaction refunded (final state)
+            timeout: transaction timed out (final state)
           type: string
           enum:
+            - terminal
             - authorized
-            - confirmed
-            - cancelled
+            - captured
             - declined
+            - cancelled
+            - refunded
             - timeout
         expire:
           type: string
